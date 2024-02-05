@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using API.Services;
+using Domain;
 using Persistence;
 
 namespace API.Extensions;
@@ -14,6 +15,7 @@ public static class IdentityServiceExtensions
         .AddEntityFrameworkStores<DataContext>();
 
         services.AddAuthentication();
+        services.AddScoped<TokenService>();
 
         return services;
     }
