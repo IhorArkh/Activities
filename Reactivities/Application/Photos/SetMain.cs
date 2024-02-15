@@ -6,7 +6,7 @@ using Persistence;
 
 namespace Application.Photos;
 
-public class Delete
+public class SetMain
 {
     public class Command : IRequest<Result<Unit>>
     {
@@ -17,13 +17,11 @@ public class Delete
     {
         private readonly DataContext _context;
         private readonly IUserAccessor _userAccessor;
-        private readonly IPhotoAccessor _photoAccessor;
 
-        public Handler(DataContext context, IUserAccessor userAccessor, IPhotoAccessor photoAccessor)
+        public Handler(DataContext context, IUserAccessor userAccessor)
         {
             _context = context;
             _userAccessor = userAccessor;
-            _photoAccessor = photoAccessor;
         }
 
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -40,22 +38,19 @@ public class Delete
             if (photo is null)
                 return null;
 
-            if (photo.IsMain)
-                return Result<Unit>.Failure("You can't delete your main photo");
+            var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
 
-            var result = await _photoAccessor.DeletePhoro(request.Id);
+            if (currentMain is not null)
+                currentMain.IsMain = false;
 
-            if (result == null)
-                return Result<Unit>.Failure("Problem deleting photo from Cloudinary");
-
-            user.Photos.Remove(photo);
+            photo.IsMain = true;
 
             var success = await _context.SaveChangesAsync() > 0;
 
             if (success)
                 return Result<Unit>.Success(Unit.Value);
 
-            return Result<Unit>.Failure("Problem deleting photo from API");
+            return Result<Unit>.Failure("Problem setting main photo");
         }
     }
 }
