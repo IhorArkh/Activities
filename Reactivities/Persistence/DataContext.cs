@@ -14,6 +14,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<Activity> Activities { get; set; }
     public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
     public DbSet<Photo> Photos { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -29,10 +30,15 @@ public class DataContext : IdentityDbContext<AppUser>
             .HasOne(x => x.AppUser)
             .WithMany(x => x.Activities)
             .HasForeignKey(x => x.AppUserId);
-        
+
         builder.Entity<ActivityAttendee>()
             .HasOne(x => x.Activity)
             .WithMany(x => x.Attendees)
             .HasForeignKey(x => x.ActivityId);
+
+        builder.Entity<Comment>()
+            .HasOne(x => x.Activity)
+            .WithMany(x => x.Comments)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
