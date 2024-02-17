@@ -1,4 +1,5 @@
 ﻿using Application.Core;
+using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
@@ -22,11 +23,13 @@ public class List
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserAccessor _userAccessor;
 
-        public Handler(DataContext context, IMapper mapper)
+        public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
         {
             _context = context;
             _mapper = mapper;
+            _userAccessor = userAccessor;
         }
 
         public async Task<Result<List<Profile>>> Handle(Query request, CancellationToken cancellationToken)
@@ -39,7 +42,8 @@ public class List
                     profiles = await _context.UserFollowings
                         .Where(x => x.Target.UserName == request.UserName)
                         .Select(x => x.Observer)
-                        .ProjectTo<Profile>(_mapper.ConfigurationProvider)
+                        .ProjectTo<Profile>(_mapper.ConfigurationProvider,
+                            new { currentUsername = _userAccessor.GetUsername() })
                         .ToListAsync();
                     break;
 
