@@ -11,4 +11,8 @@ public class AppUser : IdentityUser
     public ICollection<ActivityAttendee> Activities { get; set; } = new List<ActivityAttendee>();
 
     public ICollection<Photo> Photos { get; set; }
+
+    public ICollection<UserFollowing> Followings { get; set; }
+
+    public ICollection<UserFollowing> Followers { get; set; }
 }
