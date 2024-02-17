@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Text;
 using Domain;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services;

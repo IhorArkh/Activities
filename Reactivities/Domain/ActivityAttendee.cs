@@ -1,6 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
-
-namespace Domain;
+﻿namespace Domain;
 
 public class ActivityAttendee
 {
