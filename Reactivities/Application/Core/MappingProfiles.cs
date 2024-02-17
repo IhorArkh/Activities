@@ -28,7 +28,11 @@ public class MappingProfiles : Profile
 
         CreateMap<AppUser, Profiles.Profile>()
             .ForMember(x => x.Image, o =>
-                o.MapFrom(s => s.Photos.FirstOrDefault(p => p.IsMain).Url));
+                o.MapFrom(s => s.Photos.FirstOrDefault(p => p.IsMain).Url))
+            .ForMember(x => x.FollowersCount, o =>
+                o.MapFrom(s => s.Followers.Count()))
+            .ForMember(x => x.FollowingCount, o =>
+                o.MapFrom(s => s.Followings.Count()));
 
         CreateMap<Comment, CommentDto>()
             .ForMember(x => x.DisplayName, o =>

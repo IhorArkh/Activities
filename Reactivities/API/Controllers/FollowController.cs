@@ -10,4 +10,10 @@ public class FollowController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new FollowToggle.Command() { TargetUsername = userName }));
     }
+
+    [HttpGet("{userName}")]
+    public async Task<IActionResult> GetFollowigs(string userName, string predicate)
+    {
+        return HandleResult(await Mediator.Send(new List.Query() { UserName = userName, Predicate = predicate }));
+    }
 }
