@@ -4,7 +4,6 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Persistence;
 using Profile = Application.Profiles.Profile;
 
@@ -51,7 +50,8 @@ public class List
                     profiles = await _context.UserFollowings
                         .Where(x => x.Observer.UserName == request.UserName)
                         .Select(x => x.Target)
-                        .ProjectTo<Profile>(_mapper.ConfigurationProvider)
+                        .ProjectTo<Profile>(_mapper.ConfigurationProvider,
+                            new { currentUsername = _userAccessor.GetUsername() })
                         .ToListAsync();
                     break;
             }
