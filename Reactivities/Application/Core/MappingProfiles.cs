@@ -1,7 +1,8 @@
 ﻿using Application.Activities;
 using Application.Comments;
-using AutoMapper;
+using Application.Profiles;
 using Domain;
+using Profile = AutoMapper.Profile;
 
 namespace Application.Core;
 
@@ -52,5 +53,18 @@ public class MappingProfiles : Profile
                 o.MapFrom(s => s.Author.UserName))
             .ForMember(x => x.Image, o =>
                 o.MapFrom(s => s.Author.Photos.FirstOrDefault(p => p.IsMain).Url));
+
+        CreateMap<ActivityAttendee, UserActivityDto>()
+            .ForMember(x => x.Id, o =>
+                o.MapFrom(a => a.ActivityId))
+            .ForMember(x => x.Title, o =>
+                o.MapFrom(a => a.Activity.Title))
+            .ForMember(x => x.Category, o =>
+                o.MapFrom(a => a.Activity.Category))
+            .ForMember(x => x.Date, o =>
+                o.MapFrom(a => a.Activity.Date))
+            .ForMember(x => x.HostUsername, o =>
+                o.MapFrom(a => a.Activity.Attendees
+                    .FirstOrDefault(b => b.IsHost).AppUser.UserName));
     }
 }
