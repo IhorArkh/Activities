@@ -10,4 +10,11 @@ public class ProfilesController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new Details.Query { UserName = userName }));
     }
+
+    [HttpGet("{userName}/activities")]
+    public async Task<ActionResult> GetActivities(string userName, [FromQuery] string predicate)
+    {
+        return HandleResult(
+            await Mediator.Send(new ListActivities.Query { Username = userName, Predicate = predicate }));
+    }
 }
